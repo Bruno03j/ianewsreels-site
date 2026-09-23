@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Authorization · IA News Reels</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <div class="marca">
+      <img src="logo.png" alt="IA News Reels logo">
+      <h1>TikTok authorization</h1>
+    </div>
+    <p class="data" id="estado">Reading the response from TikTok…</p>
+  </header>
+
+  <p>
+    This page is where TikTok sends the account owner after authorizing the
+    IA News Reels app. It runs entirely in your browser: nothing on this page is
+    sent to any server.
+  </p>
+
+  <div id="resultado" hidden>
+    <h2>Authorization code</h2>
+    <p>Copy the code below and give it to the publishing software. It is used once.</p>
+    <p><textarea id="codigo" rows="3" readonly style="width:100%;font:inherit;padding:10px"></textarea></p>
+    <p><button id="copiar" type="button">Copy code</button></p>
+  </div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="terms.html">Terms of Service</a>
+    <a href="privacy.html">Privacy Policy</a>
+  </nav>
+</main>
+<script>
+  const q = new URLSearchParams(location.search);
+  const estado = document.getElementById("estado");
+  const code = q.get("code");
+  if (code) {
+    estado.textContent = "Authorization received.";
+    document.getElementById("codigo").value = code;
+    document.getElementById("resultado").hidden = false;
+    document.getElementById("copiar").onclick = () => {
+      navigator.clipboard.writeText(code).then(() => estado.textContent = "Code copied.");
+    };
+  } else if (q.get("error")) {
+    estado.textContent = "TikTok returned an error: " + (q.get("error_description") || q.get("error"));
+  } else {
+    estado.textContent = "No authorization response in this address.";
+  }
+</script>
+</body>
+</html>
